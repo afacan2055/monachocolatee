@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mona Coffee & Dessert - QR Menü</title>
+    <!-- İkonlar için FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Genel Ayarlar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fcf9f5; /* Sıcak Krem */
+            color: #4a3b32; /* Koyu Espresso Kahve */
+            padding-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Üst Bölüm ve Logo */
+        header {
+            text-align: center;
+            padding: 40px 20px 15px 20px;
+            width: 100%;
+            background: linear-gradient(to bottom, #f3ede4, #fcf9f5);
+        }
+
+        .logo {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #8B5A2B; /* Çikolata Kahvesi Çerçeve */
+            box-shadow: 0 8px 20px rgba(139, 90, 43, 0.15);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 28px;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+            color: #4a3b32;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #8c7a6b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        /* Alo Paket Konsepti */
+        .alo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+
+        .alo-paket {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #8B5A2B;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
+        .alo-no {
+            font-size: 16px;
+            font-weight: 700;
+            color: #b7793e; /* Karamel Tonu */
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buton Alanı (Instagram Tam Genişlik, Menüler Yan Yana) */
+        .nav-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 20px;
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 25px;
+        }
+
+        .menu-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 14px 10px;
+            text-align: center;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            flex: 1;
+        }
+
+        /* Sosyal Buton */
+        .btn-insta {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(220, 39, 67, 0.15);
+        }
+
+        /* Menü Butonları */
+        .btn-menu {
+            background-color: #ffffff;
+            color: #6f594b;
+            border: 1px solid #e2d7cd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Aktif Buton Stili */
+        .btn-menu.active {
+            background-color: #8B5A2B;
+            border-color: #8B5A2B;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(139, 90, 43, 0.3);
+        }
+
+        /* Menü Alanı */
+        .menu-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+
+        /* Gizleme/Gösterme Kuralları */
+        .menu-section {
+            display: none;
+        }
+
+        .menu-section.active {
+            display: block;
+            animation: menuFadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes menuFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #8B5A2B;
+            border-bottom: 2px solid #d4c3b3;
+            padding-bottom: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+        }
+
+        /* Ürün Listesi Satırları */
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px dashed #e2d7cd;
+        }
+
+        .item-details {
+            flex: 1;
+            padding-right: 15px;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4a3b32;
+            margin-bottom: 4px;
+        }
+
+        .item-description {
+            font-size: 12.5px;
+            color: #7a6b61;
+            line-height: 1.4;
+        }
+
+        .item-price {
+            font-size: 17px;
+            font-weight: 700;
+            color: #b7793e; /* Karamel Altın */
+            white-space: nowrap;
+        }
+
+        /* Özel San Sebastian Kutusu */
+        .special-box {
+            background-color: #f5ede2;
+            border: 1px dashed #b7793e;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding-top: 50px;
+            color: #a39489;
+            font-size: 11px;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo ve Başlık -->
+    <header>
+        <img src="1.jpeg" alt="Mona Logo" class="logo">
+        <h1>MONA</h1>
+        <div class="subtitle">Coffee & Dessert</div>
+    </header>
+
+    <!-- Alo Paket Bölümü -->
+    <div class="alo-container">
+        <div class="alo-paket">
+            <i class="fas fa-motorcycle"></i> ALO PAKET
+        </div>
+        <a href="tel:05368310622" class="alo-no">0 536 831 06 22</a>
+    </div>
+
+    <!-- Sadeleştirilmiş Buton Düzeni -->
+    <div class="nav-buttons">
+        <a href="https://instagram.com/monachocolate" target="_blank" class="btn btn-insta">
+            <i class="fab fa-instagram"></i> Instagram
+        </a>
+        <div class="menu-row">
+            <button id="btn-tatlilar" class="btn btn-menu">Tatlılar</button>
+            <button id="btn-icecekler" class="btn btn-menu">İçecekler</button>
+        </div>
+    </div>
+
+    <!-- Ürün Listeleri -->
+    <div class="menu-container">
+
+        <!-- TATLILAR BÖLÜMÜ -->
+        <div id="sec-tatlilar" class="menu-section">
+            <h2 class="section-title">Tatlılar</h2>
+            
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Mona Cup</div>
+                    <div class="item-description">Mona krema, sütlü Belçika çikolatası, muz, çilek, kırık antep fıstığı ve bisküvi ile servis edilir.</div>
+                </div>
+                <div class="item-price">250 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Frida Cup (Oreo)</div>
+                    <div class="item-description">Mona krema, oreo bisküvi parçaları, muz, sütlü Belçika çikolatası ile servis edilir.</div>
+                </div>
+                <div class="item-price">280 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Magnolya</div>
+                    <div class="item-description">Muzlu, çilekli ve oreolu çeşitleriyle.</div>
+                </div>
+                <div class="item-price">200 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Profiterol</div>
+                    <div class="item-description">Top şeklindeki mona hamurunun içine doldurulmuş özel krema ve üstü eritilmiş çikolata ile servis edilir.</div>
+                </div>
+                <div class="item-price">300 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Waffle Mona</div>
+                    <div class="item-description">Waffle üzerine beyaz Belçika çikolatası, sütlü Belçika çikolatası, muz, çilek, antep fıstığı ve krep kırığı ya da fındık ile birlikte servis edilir.</div>
+                </div>
+                <div class="item-price">300 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Waffle Fondü</div>
+                    <div class="item-description">Dilimlenmiş waffle, çilek, muz, sütlü ve beyaz Belçika çikolatası ile birlikte servis edilir.</div>
+                </div>
+                <div class="item-price">450 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Pankek Mona</div>
+                    <div class="item-description">Mini pankekler, çilek, muz, sütlü ve beyaz Belçika çikolatası üzerine krep kırığı ile servis edilir.</div>
+                </div>
+                <div class="item-price">300 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Pankek Frida</div>
+                    <div class="item-description">Büyük pankekler, çilek, muz, sütlü ve beyaz Belçika çikolatası üzerine krep kırığı ile servis edilir.</div>
+                </div>
+                <div class="item-price">350 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Pankek Fondü</div>
+                    <div class="item-description">Mini pankekler, çilek, muz, sütlü ve beyaz Belçika çikolatası ile birlikte servis edilir.</div>
+                </div>
+                <div class="item-price">350 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Krep Mona</div>
+                    <div class="item-description">Krep, dondurma, taze çilek, muz, sütlü ve beyaz Belçika çikolatası ile servis edilir.</div>
+                </div>
+                <div class="item-price">320 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Krep Fondü</div>
+                    <div class="item-description">Muza sarılı krep dilimleri, taze çilek ve sütlü Belçika çikolatası ile servis edilir.</div>
+                </div>
+                <div class="item-price">350 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Mona Box</div>
+                    <div class="item-description">6 adet mini waffle, 16 adet pankek, brownie parçaları, çilek ve muz, sütlü ve beyaz Belçika çikolatası bir arada.</div>
+                </div>
+                <div class="item-price">600 ₺</div>
+            </div>
+
+            <div class="special-box">
+                <div class="item-details">
+                    <div class="item-name" style="color: #8B5A2B;">San Sebastian + Çay</div>
+                    <div class="item-description">Enfes San Sebastian lezzeti taze çay eşliğinde sunulur.</div>
+                </div>
+                <div class="item-price">250 ₺</div>
+            </div>
+        </div>
+
+        <!-- İÇECEKLER BÖLÜMÜ -->
+        <div id="sec-icecekler" class="menu-section">
+            <h2 class="section-title">İçecek Çeşitleri</h2>
+
+            <div class="menu-item">
+                <div class="item-name">Çay</div>
+                <div class="item-price">20 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Filtre Kahve</div>
+                <div class="item-price">70 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Sütlü Filtre Kahve</div>
+                <div class="item-price">80 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Latte</div>
+                <div class="item-price">120 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Caramel Latte</div>
+                <div class="item-price">130 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Americano</div>
+                <div class="item-price">70 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Türk Kahvesi</div>
+                <div class="item-price">50 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Bitki Çayları</div>
+                    <div class="item-description">Ihlamur, yeşil çay, ada çayı, kış çayı seçenekleriyle.</div>
+                </div>
+                <div class="item-price">70 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Salep</div>
+                <div class="item-price">50 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Sıcak Çikolata</div>
+                <div class="item-price">50 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Cool Lime</div>
+                <div class="item-price">60 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Limonata</div>
+                <div class="item-price">60 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Portakal Suyu</div>
+                <div class="item-price">75 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Kola</div>
+                <div class="item-price">60 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Gazoz</div>
+                <div class="item-price">40 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Meyveli Gazoz</div>
+                <div class="item-price">40 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Meyve Suyu</div>
+                    <div class="item-description">Şeftali, vişne, karışık seçenekleriyle.</div>
+                </div>
+                <div class="item-price">30 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-details">
+                    <div class="item-name">Soda</div>
+                    <div class="item-description">Limonlu, meyveli, sade, karpuzlu çilekli, elmalı seçenekleriyle.</div>
+                </div>
+                <div class="item-price">30 ₺</div>
+            </div>
+
+            <div class="menu-item">
+                <div class="item-name">Su</div>
+                <div class="item-price">15 ₺</div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Mona Chocolate - Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <!-- JavaScript Kodu -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const btnTatlilar = document.getElementById('btn-tatlilar');
+            const btnIcecekler = document.getElementById('btn-icecekler');
+            const secTatlilar = document.getElementById('sec-tatlilar');
+            const secIcecekler = document.getElementById('sec-icecekler');
+
+            function temizle() {
+                secTatlilar.classList.remove('active');
+                secIcecekler.classList.remove('active');
+                btnTatlilar.classList.remove('active');
+                btnIcecekler.classList.remove('active');
+            }
+
+            btnTatlilar.addEventListener('click', function() {
+                temizle();
+                secTatlilar.classList.add('active');
+                btnTatlilar.classList.add('active');
+            });
+
+            btnIcecekler.addEventListener('click', function() {
+                temizle();
+                secIcecekler.classList.add('active');
+                btnIcecekler.classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
