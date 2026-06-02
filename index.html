@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mona Coffee & Dessert - QR Menü</title>
-    <!-- İkonlar için FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Genel Ayarlar */
@@ -13,41 +12,72 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Mobil tıklama mavi flaşını engeller */
         }
 
         body {
-            background-color: #fcf9f5; /* Sıcak Krem */
+            background: linear-gradient(135deg, #fdfaf6 0%, #f4eae0 50%, #e9dad0 100%);
+            background-attachment: fixed;
             color: #4a3b32; /* Koyu Espresso Kahve */
-            padding-bottom: 40px;
+            padding-bottom: 60px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Arka planı canlandıran doku efekti */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj4KPHBhdGggZD0iTTE1IDEwYzIgMCAzIDEgMyAzcy0xIDMtMyAzLTMtMS0zLTMgMS0zIDMtM3ptMzAgMGMyIDAgMyAxIDMgM3MtMSAzLTMgMy0zLTEtMy0zIDEtMyAzLTN6TTMwIDM1YzIgMCAzIDEgMyAzcy0xIDMtMyAzLTMtMS0zLTMgMS0zIDMtM3pNMTUgNDVjMS41IDAgMi41LjggMi41IDJzLTEgMi0yLjUgMi0yLjUtLjgtMi41LTIgMS0yIDIuNS0yem0zMCAwYzEuNSAwIDIuNS44IDIuNSAycy0xIDUtMi41IDItMi41LS44LTIuNS0yIDEtMiAyLjUtMnoiIGZpbGw9IiM4QjVBMkIiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPgo8L3N2Zz4=");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Sayfa Açılış Animasyonları */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseText {
+            0% { opacity: 0.6; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(0.98); }
         }
 
         /* Üst Bölüm ve Logo */
         header {
             text-align: center;
-            padding: 40px 20px 15px 20px;
+            padding: 45px 20px 20px 20px;
             width: 100%;
-            background: linear-gradient(to bottom, #f3ede4, #fcf9f5);
+            z-index: 1;
+            animation: fadeInUp 0.7s ease-out forwards;
         }
 
         .logo {
-            width: 160px;
-            height: 160px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #8B5A2B; /* Çikolata Kahvesi Çerçeve */
-            box-shadow: 0 8px 20px rgba(139, 90, 43, 0.15);
+            border: 4px solid #8B5A2B;
+            box-shadow: 0 10px 30px rgba(139, 90, 43, 0.3);
             margin-bottom: 15px;
+            transition: transform 0.4s ease;
         }
 
         h1 {
-            font-size: 28px;
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-            color: #4a3b32;
+            font-size: 32px;
+            letter-spacing: 5px;
+            margin-bottom: 4px;
+            color: #3a2e26;
             font-weight: 700;
         }
 
@@ -55,65 +85,38 @@
             font-size: 13px;
             color: #8c7a6b;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
             margin-bottom: 10px;
         }
 
-        /* Alo Paket Konsepti */
-        .alo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 5px;
-        }
-
-        .alo-paket {
-            font-size: 12px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background-color: #8B5A2B;
-            padding: 4px 12px;
-            border-radius: 12px;
-        }
-
-        .alo-no {
-            font-size: 16px;
-            font-weight: 700;
-            color: #b7793e; /* Karamel Tonu */
-            text-decoration: none;
-            letter-spacing: 0.5px;
-        }
-
-        /* Buton Alanı (Instagram Tam Genişlik, Menüler Yan Yana) */
+        /* Buton Alanı */
         .nav-buttons {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             padding: 0 20px;
             width: 100%;
             max-width: 450px;
             margin-bottom: 25px;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeInUp 0.7s ease-out 0.15s forwards;
         }
 
         .menu-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             width: 100%;
         }
 
         .btn {
-            padding: 14px 10px;
+            padding: 15px 10px;
             text-align: center;
             border-radius: 25px;
             text-decoration: none;
             font-weight: 600;
             font-size: 15px;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -121,61 +124,78 @@
             cursor: pointer;
             border: none;
             flex: 1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
-        /* Sosyal Buton */
+        .btn:active { transform: scale(0.95); }
+
         .btn-insta {
             background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(220, 39, 67, 0.15);
+            box-shadow: 0 4px 15px rgba(220, 39, 67, 0.25);
         }
 
-        /* Menü Butonları */
         .btn-menu {
             background-color: #ffffff;
             color: #6f594b;
-            border: 1px solid #e2d7cd;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #dfd3c7;
         }
 
-        /* Aktif Buton Stili */
         .btn-menu.active {
             background-color: #8B5A2B;
             border-color: #8B5A2B;
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(139, 90, 43, 0.3);
+            box-shadow: 0 5px 18px rgba(139, 90, 43, 0.4);
         }
 
-        /* Menü Alanı */
+        .welcome-hint {
+            text-align: center;
+            margin-top: 30px;
+            color: #7a6b61;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            animation: pulseText 2s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        .welcome-hint i { margin-right: 6px; color: #8B5A2B; }
+
+        /* Menü Kartı Alanı */
         .menu-container {
             width: 100%;
             max-width: 600px;
             padding: 0 20px;
+            z-index: 1;
         }
 
-        /* Gizleme/Gösterme Kuralları */
         .menu-section {
             display: none;
+            background-color: #ffffff;
+            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(105, 75, 55, 0.15); 
+            border: 1px solid #f0e4da;
         }
 
         .menu-section.active {
             display: block;
-            animation: menuFadeIn 0.4s ease-in-out;
+            animation: menuFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         @keyframes menuFadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: 22px;
             color: #8B5A2B;
-            border-bottom: 2px solid #d4c3b3;
-            padding-bottom: 6px;
+            border-bottom: 2px solid #f3ece6;
+            padding-bottom: 10px;
             margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             text-align: center;
         }
 
@@ -184,8 +204,17 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding: 15px 0;
-            border-bottom: 1px dashed #e2d7cd;
+            padding: 16px 8px;
+            border-bottom: 1px solid #f5ede6;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer; /* Tıklanabilir el işareti */
+        }
+
+        .menu-item:hover, .menu-item:active {
+            background-color: #faf5f0;
+            padding-left: 12px;
+            padding-right: 12px;
+            border-radius: 10px;
         }
 
         .item-details {
@@ -196,7 +225,7 @@
         .item-name {
             font-size: 16px;
             font-weight: 600;
-            color: #4a3b32;
+            color: #3a2e26;
             margin-bottom: 4px;
         }
 
@@ -209,21 +238,118 @@
         .item-price {
             font-size: 17px;
             font-weight: 700;
-            color: #b7793e; /* Karamel Altın */
+            color: #b7793e;
             white-space: nowrap;
         }
 
-        /* Özel San Sebastian Kutusu */
         .special-box {
-            background-color: #f5ede2;
-            border: 1px dashed #b7793e;
-            border-radius: 12px;
-            padding: 15px;
+            background-color: #fbf7f2;
+            border: 2px dashed #b7793e;
+            border-radius: 14px;
+            padding: 18px;
             margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
         }
+
+        .special-box:active { transform: scale(0.98); }
+
+        /* ──── INTERAKTIF POP-UP (MODAL) GÖRSEL EFEKTLERİ ──── */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(58, 46, 38, 0.4); /* Koyu kahve saydam arka plan */
+            backdrop-filter: blur(4px); /* Arkayı hafifçe bulandırır */
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Mobilde aşağıdan yukarı açılması için */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            border-top-left-radius: 26px;
+            border-top-right-radius: 26px;
+            padding: 30px 24px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            text-align: center;
+            border: 1px solid #f0e4da;
+        }
+
+        .modal-overlay.open .modal-content {
+            transform: translateY(0);
+        }
+
+        /* Küçük tutamaç çizgisi (Mobil görünüm için) */
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background-color: #dfd3c7;
+            border-radius: 2px;
+            margin: -15px auto 20px auto;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #3a2e26;
+            margin-bottom: 12px;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: #7a6b61;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .modal-price {
+            font-size: 24px;
+            font-weight: 800;
+            color: #b7793e;
+            background-color: #fbf7f2;
+            padding: 10px 25px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 25px;
+            border: 1px dashed #e2d7cd;
+        }
+
+        .modal-close-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #8B5A2B;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(139, 90, 43, 0.2);
+            transition: background-color 0.2s;
+        }
+
+        .modal-close-btn:active { background-color: #6f4722; }
 
         footer {
             text-align: center;
@@ -233,21 +359,20 @@
             font-size: 11px;
             letter-spacing: 1px;
             width: 100%;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeInUp 0.7s ease-out 0.3s forwards;
         }
     </style>
 </head>
 <body>
 
-    <!-- Logo ve Başlık -->
     <header>
         <img src="1.jpeg" alt="Mona Logo" class="logo">
         <h1>MONA</h1>
         <div class="subtitle">Coffee & Dessert</div>
     </header>
 
-
-
-    <!-- Sadeleştirilmiş Buton Düzeni -->
     <div class="nav-buttons">
         <a href="https://instagram.com/mona.coffeedessert" target="_blank" class="btn btn-insta">
             <i class="fab fa-instagram"></i> Instagram
@@ -258,17 +383,19 @@
         </div>
     </div>
 
-    <!-- Ürün Listeleri -->
     <div class="menu-container">
+        
+        <div id="welcome-hint" class="welcome-hint">
+            <i class="fas fa-hand-pointer"></i> Lütfen menüyü görüntülemek için yukarıdan seçim yapın.
+        </div>
 
-        <!-- TATLILAR BÖLÜMÜ -->
         <div id="sec-tatlilar" class="menu-section">
             <h2 class="section-title">Tatlılar</h2>
             
             <div class="menu-item">
                 <div class="item-details">
                     <div class="item-name">Mona Cup</div>
-                    <div class="item-description">Mona krema, sütlü Belçika çikolatası, muz, çilek, kırık antep fıstığı ve bisküvi ile servis edilir.</div>
+                    <div class="item-description">Mona krema, sütlü Belçika çikolatası, muz, çilek, kırık antep fıstığı og bisküvi ile servis edilir.</div>
                 </div>
                 <div class="item-price">250 ₺</div>
             </div>
@@ -370,97 +497,141 @@
             </div>
         </div>
 
-        <!-- İÇECEKLER BÖLÜMÜ -->
         <div id="sec-icecekler" class="menu-section">
             <h2 class="section-title">İçecek Çeşitleri</h2>
 
             <div class="menu-item">
-                <div class="item-name">Çay</div>
+                <div class="item-details">
+                    <div class="item-name">Çay</div>
+                    <div class="item-description">Taze demlenmiş geleneksel Türk çayı.</div>
+                </div>
                 <div class="item-price">20 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Filtre Kahve</div>
+                <div class="item-details">
+                    <div class="item-name">Filtre Kahve</div>
+                    <div class="item-description">Özenle seçilmiş kahve çekirdeklerinden taze filtre kahve.</div>
+                </div>
                 <div class="item-price">70 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Sütlü Filtre Kahve</div>
+                <div class="item-details">
+                    <div class="item-name">Sütlü Filtre Kahve</div>
+                    <div class="item-description">Yumuşak içimli, sütlü taze filtre kahve.</div>
+                </div>
                 <div class="item-price">80 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Latte</div>
+                <div class="item-details">
+                    <div class="item-name">Latte</div>
+                    <div class="item-description">Yoğun espresso ve kadifemsi süt köpüğü.</div>
+                </div>
                 <div class="item-price">120 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Caramel Latte</div>
+                <div class="item-details">
+                    <div class="item-name">Caramel Latte</div>
+                    <div class="item-description">Karamel şurubu ile tatlandırılmış enfes latte lezzeti.</div>
+                </div>
                 <div class="item-price">130 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Americano</div>
+                <div class="item-details">
+                    <div class="item-name">Americano</div>
+                    <div class="item-description">Espresso ve sıcak suyun mükemmel uyumu.</div>
+                </div>
                 <div class="item-price">70 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Türk Kahvesi</div>
+                <div class="item-details">
+                    <div class="item-name">Türk Kahvesi</div>
+                    <div class="item-description">Geleneksel sunumuyla köpüklü Türk kahvesi.</div>
+                </div>
                 <div class="item-price">50 ₺</div>
             </div>
 
             <div class="menu-item">
                 <div class="item-details">
                     <div class="item-name">Bitki Çayları</div>
-                    <div class="item-description">Ihlamur, yeşil çay, ada çayı, kış çayı seçenekleriyle.</div>
+                    <div class="item-description">Ihlamur, yeşil çay, ada çayı veya kış çayı seçenekleriyle.</div>
                 </div>
                 <div class="item-price">70 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Salep</div>
+                <div class="item-details">
+                    <div class="item-name">Salep</div>
+                    <div class="item-description">İçinizi ısıtacak sıcak salep keyfi.</div>
+                </div>
                 <div class="item-price">50 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Sıcak Çikolata</div>
+                <div class="item-details">
+                    <div class="item-name">Sıcak Çikolata</div>
+                    <div class="item-description">Gerçek çikolata özlü yoğun sıcak içecek.</div>
+                </div>
                 <div class="item-price">50 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Cool Lime</div>
+                <div class="item-details">
+                    <div class="item-name">Cool Lime</div>
+                    <div class="item-description">Nane ve limon özleriyle hazırlanan ferahlatıcı soğuk içecek.</div>
+                </div>
                 <div class="item-price">60 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Limonata</div>
+                <div class="item-details">
+                    <div class="item-name">Limonata</div>
+                    <div class="item-description">Ev yapımı taze ve serinletici limonata.</div>
+                </div>
                 <div class="item-price">60 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Portakal Suyu</div>
+                <div class="item-details">
+                    <div class="item-name">Portakal Suyu</div>
+                    <div class="item-description">%100 taze sıkılmış portakal suyu.</div>
+                </div>
                 <div class="item-price">75 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Kola</div>
+                <div class="item-details">
+                    <div class="item-name">Kola</div>
+                    <div class="item-description">Soğuk kutu kola.</div>
+                </div>
                 <div class="item-price">60 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Gazoz</div>
+                <div class="item-details">
+                    <div class="item-name">Gazoz</div>
+                    <div class="item-description">Soğuk ve ferahlatıcı gazoz.</div>
+                </div>
                 <div class="item-price">40 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Meyveli Gazoz</div>
+                <div class="item-details">
+                    <div class="item-name">Meyveli Gazoz</div>
+                    <div class="item-description">Farklı meyve aromalı soğuk gazoz seçeneği.</div>
+                </div>
                 <div class="item-price">40 ₺</div>
             </div>
 
             <div class="menu-item">
                 <div class="item-details">
                     <div class="item-name">Meyve Suyu</div>
-                    <div class="item-description">Şeftali, vişne, karışık seçenekleriyle.</div>
+                    <div class="item-description">Şeftali, vişne veya karışık meyve suyu çeşitleri.</div>
                 </div>
                 <div class="item-price">30 ₺</div>
             </div>
@@ -468,36 +639,61 @@
             <div class="menu-item">
                 <div class="item-details">
                     <div class="item-name">Soda</div>
-                    <div class="item-description">Limonlu, meyveli, sade, karpuzlu çilekli, elmalı seçenekleriyle.</div>
+                    <div class="item-description">Limonlu, meyveli, sade, karpuzlu çilekli veya elmalı maden suyu çeşitleri.</div>
                 </div>
                 <div class="item-price">30 ₺</div>
             </div>
 
             <div class="menu-item">
-                <div class="item-name">Su</div>
+                <div class="item-details">
+                    <div class="item-name">Su</div>
+                    <div class="item-description">Şişe ambalajlı soğuk içme suyu.</div>
+                </div>
                 <div class="item-price">15 ₺</div>
             </div>
         </div>
 
     </div>
 
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-handle"></div>
+            <div id="modal-item-name" class="modal-title">Ürün Adı</div>
+            <div id="modal-item-desc" class="modal-desc">Ürün açıklaması burada yer alacak.</div>
+            <div>
+                <span id="modal-item-price" class="modal-price">0 ₺</span>
+            </div>
+            <button id="modal-close" class="modal-close-btn">Menüye Dön</button>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2026 Mona Chocolate - Tüm Hakları Saklıdır.</p>
     </footer>
 
-    <!-- JavaScript Kodu -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Menü Sekmeleri Tanımları
             const btnTatlilar = document.getElementById('btn-tatlilar');
             const btnIcecekler = document.getElementById('btn-icecekler');
             const secTatlilar = document.getElementById('sec-tatlilar');
             const secIcecekler = document.getElementById('sec-icecekler');
+            const welcomeHint = document.getElementById('welcome-hint');
 
+            // Modal (Pop-up) Elementleri Tanımları
+            const modal = document.getElementById('product-modal');
+            const modalName = document.getElementById('modal-item-name');
+            const modalDesc = document.getElementById('modal-item-desc');
+            const modalPrice = document.getElementById('modal-item-price');
+            const modalClose = document.getElementById('modal-close');
+
+            // Sekme Değiştirme Fonksiyonu
             function temizle() {
                 secTatlilar.classList.remove('active');
                 secIcecekler.classList.remove('active');
                 btnTatlilar.classList.remove('active');
                 btnIcecekler.classList.remove('active');
+                welcomeHint.style.display = 'none';
             }
 
             btnTatlilar.addEventListener('click', function() {
@@ -511,6 +707,49 @@
                 secIcecekler.classList.add('active');
                 btnIcecekler.classList.add('active');
             });
+
+            // Ürün Tıklama ve Bilgi Getirme Fonksiyonu
+            function setupProductClicks() {
+                // Hem normal menü elemanlarını hem de özel kutuyu (San Sebastian) kapsar
+                const items = document.querySelectorAll('.menu-item, .special-box');
+                
+                items.forEach(item => {
+                    item.addEventListener('click', function() {
+                        // Tıklanan satırdan bilgileri çekiyoruz
+                        const name = this.querySelector('.item-name').innerText;
+                        const price = this.querySelector('.item-price').innerText;
+                        
+                        // Eğer açıklama kısmı varsa çek, yoksa boş bırakma (bazı içecekler için koruma)
+                        const descEl = this.querySelector('.item-description');
+                        const desc = descEl ? descEl.innerText : "Mona kalitesiyle özenle hazırlanan nefis lezzet.";
+
+                        // Bilgileri alt pencereye yerleştiriyoruz
+                        modalName.innerText = name;
+                        modalDesc.innerText = desc;
+                        modalPrice.innerText = price;
+
+                        // Pencereyi açıyoruz
+                        modal.classList.add('open');
+                    });
+                });
+            }
+
+            // Kapatma Fonksiyonları
+            function closeModal() {
+                modal.classList.remove('open');
+            }
+
+            modalClose.addEventListener('click', closeModal);
+            
+            // Dışarıdaki boşluğa tıklayınca da kapansın
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Tıklama dinleyicilerini başlat
+            setupProductClicks();
         });
     </script>
 
